@@ -1,74 +1,89 @@
-// Take user's input
-function playerChoice () {
-    let playerSelection = prompt('Rock, Paper or Scissors?').toLowerCase();
-    let a = 2;
-    // Check user's input, it must be rock, paper or scissors, otherwise inform user and ask to make a choice again
-    while (a > 1) {
-        if (playerSelection === 'rock' || playerSelection === 'paper' || playerSelection === 'scissors') {
-            a--
-        } else {
-            alert('Please write either rock, paper or scissors.');
-            playerSelection = prompt('Rock, Paper or Scissors?').toLowerCase();
-            }
-        }
-    return playerSelection;    
-    }
-// Make a function to randomly determine computers choice
-function computerSelection() {
-    let randInt = Math.floor(Math.random() * 3);
-    return randInt === 0? 'rock' :
-    randInt === 1? 'paper' :
-    'scissors'
-}
-
-// Make a variables to store counts of wins and loses
+// Make a variables to store counts of wins, loses, draws and the game rounds
 let playerWinCount = 0;
 let playerLoseCount = 0;
+let drawCount = 0;
+let gameCount = 0;
 // Make a function to play the game:
-function game(playerSelection, computerSelection) {
-    //    compare user's choice against computers;
-    if (playerSelection === 'rock') {
+function game(e) {
+    alert('Rock, Paper or Scissors?')
+    // Make a random choice for computer
+    let randInt = Math.floor(Math.random() * 3);
+    let computerSelection = randInt === 0? 'rock' :
+    randInt === 1? 'paper' :
+    'scissors';
+    // Compare player's and computer's choices
+    if (e.target.innerText.toLowerCase() === 'rock') {
         if (computerSelection === 'rock') {
-            return 'draw'
+            drawCount++;
+            scoreDiv.textContent = `Draw. Your current score is ${playerWinCount} wins and ${playerLoseCount} loses and ${drawCount} draws.`;
         } else if (computerSelection === 'paper') {
             playerLoseCount++;
-            return 'you lost this round';
+            scoreDiv.textContent = `You Lost((.Your current score is ${playerWinCount} wins and ${playerLoseCount} loses and ${drawCount} draws.`;
         } else {
             playerWinCount++;
-            return 'you win this round';
+            scoreDiv.textContent = `You Won! Your current score is ${playerWinCount} wins and ${playerLoseCount} loses and ${drawCount} draws.`;
         }
-    } else if (playerSelection === 'paper') {
+    } else if (e.target.innerText.toLowerCase() === 'paper') {
         if (computerSelection === 'paper') {
-            return 'draw';
+            drawCount++;
+            scoreDiv.textContent = `Draw. Your current score is ${playerWinCount} wins and ${playerLoseCount} loses and ${drawCount} draws.`;
         } else if (computerSelection === 'rock') {
             playerWinCount++;
-            return 'you win this round';
+            scoreDiv.textContent = `You Won! Your current score is ${playerWinCount} wins and ${playerLoseCount} loses and ${drawCount} draws.`;
         } else {
             playerLoseCount++;
-            return 'you lose this round';
+            scoreDiv.textContent = `You Lost((. Your current score is ${playerWinCount} wins and ${playerLoseCount} loses and ${drawCount} draws.`;
         }
     } else {
         if (computerSelection === 'scissors') {
-            return 'draw';
+            drawCount++;
+            scoreDiv.textContent = `Draw. Your current score is ${playerWinCount} wins and ${playerLoseCount} loses and ${drawCount} draws.`;
         } else if (computerSelection === 'rock') {
             playerLoseCount++;
-            return 'you lose this round';
+            scoreDiv.textContent = `You Lost((. Your current score is ${playerWinCount} wins and ${playerLoseCount} loses and ${drawCount} draws.`;
         } else {
             playerWinCount++;
-            return 'you win this round';
+            scoreDiv.textContent = `You Won! Your current score is ${playerWinCount} wins and ${playerLoseCount} loses and ${drawCount} draws.`;
         }
     }
 
+    gameCount++;
+    console.log(gameCount)
+
+    if (gameCount === 5) {
+        if (playerWinCount > playerLoseCount) {
+            scoreDiv.textContent = `Congratulations, you won the game. Your total score is ${playerWinCount} wins and ${playerLoseCount} loses and ${drawCount} draws. If you want to play another round just click on one of the choices.`;
+        } else if (playerWinCount < playerLoseCount) {
+            scoreDiv.textContent = `You lost, you sorry excuse for of a human being. Your total score is ${playerWinCount} wins and ${playerLoseCount} loses ${drawCount} draws. If you want to play another round just click on one of the choices.`;
+        } else {
+            scoreDiv.textContent = `It's a draw, pretty disapointing. Your total score is ${playerWinCount} wins and ${playerLoseCount} loses ${drawCount} draws. If you want to play another round just click on one of the choices.`;
+        }
+        gameCount = 0;
+        drawCount = 0;
+        playerLoseCount = 0;
+        playerWinCount = 0;
+    }
 }
-//    count the rounds(5 total);
-for (let i = 5; i > 0; i--) {
-    console.log(game(playerChoice(), computerSelection()))
-}
-//    count the wins and report the the winner
-if (playerWinCount > playerLoseCount) {
-    console.log(`Congratulations, you won the game. Your score is ${playerWinCount} wins and ${playerLoseCount} loses and ${5 - playerLoseCount - playerWinCount} draws.`);
-} else if (playerWinCount < playerLoseCount) {
-    console.log(`You lost, you sorry excuse for of a human being. Your score is ${playerWinCount} wins and ${playerLoseCount} loses ${5 - playerLoseCount - playerWinCount} draws.`);
-} else {
-    console.log(`It's a draw, pretty disapointing. Your score is ${playerWinCount} wins and ${playerLoseCount} loses ${5 - playerLoseCount - playerWinCount} draws.`);
-}
+
+
+
+const rockButton = document.createElement('button');
+rockButton.textContent = 'Rock';
+const scissorsButton = document.createElement('button');
+scissorsButton.textContent = 'Scissors';
+const paperButton = document.createElement('button');
+paperButton.textContent = 'Paper';
+const playground = document.querySelector('#playground');
+playground.appendChild(rockButton);
+playground.appendChild(paperButton);
+playground.appendChild(scissorsButton);
+const scoreDiv = document.createElement('div');
+const body = document.querySelector('body');
+body.appendChild(scoreDiv);
+
+rockButton.addEventListener('click', game);
+paperButton.addEventListener('click', game);
+scissorsButton.addEventListener('click', game);
+
+
+
